@@ -20,7 +20,23 @@ contract QuizGameTest is Test {
         emit log(game.question());
     }
 
-    function testExample() public {
-        assertTrue(true);
+    function testQuizFail() public {
+        try game.guess("1") {
+            assertTrue(false);
+        } catch {
+            assertTrue(true);
+        }
     }
+
+    function testQuizPass() public {
+        uint256 beginBalance = address(this).balance;
+        // Set game contract with 1 ether balance
+        deal(address(game), 1 ether);
+        game.guess("42");
+        assertEq(address(this).balance, beginBalance + 1 ether);
+    }
+
+    fallback() external payable {}
+
+    receive() external payable {}
 }
