@@ -6,6 +6,9 @@ contract QuizGame {
     bytes32 public hashedAnswer;
     string public question;
 
+    event QuizFunded(uint256 amount);
+    event AnswerGuessed();
+
     constructor(string memory _question, bytes32 _hashedAnswer) {
         question = _question;
         hashedAnswer = _hashedAnswer;
@@ -15,11 +18,16 @@ contract QuizGame {
         bytes32 hashedGuessedAnswer = keccak256(abi.encodePacked(salt, answer));
         require(hashedGuessedAnswer == hashedAnswer, "wrong answer");
         if (address(this).balance > 0) {
+            emit AnswerGuessed();
             payable(msg.sender).transfer(address(this).balance);
         }
     }
 
-    fallback() external payable {}
+    fallback() external payable {
+        emit QuizFunded(address(this).balance);
+    }
 
-    receive() external payable {}
+    receive() external payable {
+        emit QuizFunded(address(this).balance);
+    }
 }
