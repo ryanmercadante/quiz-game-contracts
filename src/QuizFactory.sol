@@ -15,4 +15,8 @@ contract QuizFactory {
         quizzes.push(quiz);
         emit QuizCreated(quiz);
     }
+
+    function getQuizzes() public view returns (QuizGame[] memory) {
+        return quizzes;
+    }
 }

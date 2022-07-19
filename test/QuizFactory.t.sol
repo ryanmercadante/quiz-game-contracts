@@ -7,6 +7,7 @@ import "../src/QuizFactory.sol";
 
 contract QuizFactoryTest is Test {
     QuizFactory public factory;
+    bytes32 salt = bytes32("123123123");
 
     function setUp() public {
         factory = new QuizFactory();
@@ -15,7 +16,6 @@ contract QuizFactoryTest is Test {
     function testCreateQuiz() public {
         string memory question = "What is the answer to life?";
         string memory answer = "42";
-        bytes32 salt = bytes32("123123123");
         bytes32 hashedAnswer = keccak256(abi.encodePacked(salt, answer));
 
         factory.createQuiz(question, hashedAnswer);
@@ -24,5 +24,15 @@ contract QuizFactoryTest is Test {
             keccak256(abi.encodePacked(quiz.question())),
             keccak256(abi.encodePacked(question))
         );
+    }
+
+    function testCountQuizzes() public {
+        string memory question = "What is the answer to life?";
+        string memory answer = "42";
+        bytes32 hashedAnswer = keccak256(abi.encodePacked(salt, answer));
+        factory.createQuiz(question, hashedAnswer);
+        factory.createQuiz(question, hashedAnswer);
+        QuizGame[] memory quizzes = factory.getQuizzes();
+        assertEq(quizzes.length, 2);
     }
 }
