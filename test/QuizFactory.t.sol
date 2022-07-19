@@ -17,7 +17,6 @@ contract QuizFactoryTest is Test {
         string memory answer = "42";
         bytes32 salt = bytes32("123123123");
         bytes32 hashedAnswer = keccak256(abi.encodePacked(salt, answer));
-        emit log_bytes32(hashedAnswer);
 
         factory.createQuiz(question, hashedAnswer);
         QuizGame quiz = factory.quizzes(0);
